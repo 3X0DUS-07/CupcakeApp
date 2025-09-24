@@ -8,4 +8,14 @@ object DataSource {
         Pair(R.string.six_cupcakes, 6),
         Pair(R.string.twelve_cupcakes, 12)
     )
+
+
+val flavors = listOf(
+    R.string.vanilla,
+    R.string.chocolate,
+    R.string.red_velvet,
+    R.string.salted_caramel,
+    R.string.coffee
+)
+
 }
