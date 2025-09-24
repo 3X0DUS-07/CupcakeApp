@@ -48,7 +48,15 @@ fun StartOrderScreen(
             )
 
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_small)))
-
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(
+                    dimensionResource(R.dimen.padding_medium)
+                )
+            ) {
+                // Aquí se colocarán más elementos
+            }
         }
     }
 }
