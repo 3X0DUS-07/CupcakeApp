@@ -12,7 +12,6 @@ private const val PRICE_PER_CUPCAKE = 2.00
 data class OrderUiState(
     val quantity: Int = 0,
     val flavor: String = "",
-    val pickupDate: String = "",
     val price: String = ""
 )
 

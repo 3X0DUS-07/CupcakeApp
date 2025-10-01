@@ -80,6 +80,7 @@ fun SelectOptionScreen(
                     bottom = dimensionResource(R.dimen.padding_medium)
                 )
             )
+
             Text(
                 text = stringResource(R.string.subtotal_price, subtotal),
                 modifier = Modifier
@@ -123,7 +124,7 @@ fun SelectOptionPreview() {
     CupcakeApp1Theme {
         SelectOptionScreen(
             subtotal = "$3.00",
-            options = listOf("Option 1", "Option 2", "Option 3", "Option 4"),
+            options = listOf("Vanilla", "Chocolate", "Red Velvet", "Coffee"),
             modifier = Modifier.fillMaxWidth()
         )
     }

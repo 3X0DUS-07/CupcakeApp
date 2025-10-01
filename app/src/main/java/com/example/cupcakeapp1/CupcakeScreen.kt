@@ -30,11 +30,11 @@ import com.example.cupcakeapp1.data.DataSource
 import com.example.cupcakeapp1.ui.OrderViewModel
 import com.example.cupcakeapp1.ui.StartOrderScreen
 import com.example.cupcakeapp1.ui.SelectOptionScreen
+import com.example.cupcakeapp1.ui.OrderSummaryScreen
 
 enum class CupcakeScreen(val title: String) {
     Start(title = "Cupcake App"),
     Flavor(title = "Choose Flavor"),
-    Pickup(title = "Choose Pickup Date"),
     Summary(title = "Order Summary")
 }
 
@@ -118,21 +118,6 @@ fun CupcakeApp(
                         viewModel.setFlavor(flavor)
                     },
                     onNextButtonClicked = {
-                        navController.navigate(CupcakeScreen.Pickup.name)
-                    },
-                    onCancelButtonClicked = {
-                        cancelOrderAndNavigateToStart(viewModel, navController)
-                    },
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            composable(route = CupcakeScreen.Pickup.name) {
-                SelectOptionScreen(
-                    subtotal = uiState.price,
-                    options = listOf("Today", "Tomorrow", "Next Week"),
-                    onSelectionChanged = { /* TODO */ },
-                    onNextButtonClicked = {
                         navController.navigate(CupcakeScreen.Summary.name)
                     },
                     onCancelButtonClicked = {
@@ -143,7 +128,17 @@ fun CupcakeApp(
             }
 
             composable(route = CupcakeScreen.Summary.name) {
-                // TODO: Implementar pantalla de resumen
+                val context = LocalContext.current
+                OrderSummaryScreen(
+                    orderUiState = uiState,
+                    onCancelButtonClicked = {
+                        cancelOrderAndNavigateToStart(viewModel, navController)
+                    },
+                    onSendButtonClicked = { subject, summary ->
+                        shareOrder(context, subject = subject, summary = summary)
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
     }
@@ -155,4 +150,18 @@ private fun cancelOrderAndNavigateToStart(
 ) {
     viewModel.resetOrder()
     navController.popBackStack(CupcakeScreen.Start.name, inclusive = false)
+}
+
+private fun shareOrder(context: android.content.Context, subject: String, summary: String) {
+    val intent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(android.content.Intent.EXTRA_SUBJECT, subject)
+        putExtra(android.content.Intent.EXTRA_TEXT, summary)
+    }
+    context.startActivity(
+        android.content.Intent.createChooser(
+            intent,
+            context.getString(R.string.new_cupcake_order)
+        )
+    )
 }
