@@ -10,4 +10,7 @@
     <string name="red_velvet">Red Velvet</string>
     <string name="salted_caramel">Salted Caramel</string>
     <string name="coffee">Coffee</string>
+    <string name="subtotal_price">Subtotal: %s</string>
+    <string name="cancel">Cancel</string>
+    <string name="send">Send Order to Another App</string>
 </resources>

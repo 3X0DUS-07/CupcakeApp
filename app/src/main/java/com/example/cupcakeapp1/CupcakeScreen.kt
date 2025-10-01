@@ -15,22 +15,25 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.cupcakeapp1.data.DataSource
+import com.example.cupcakeapp1.ui.OrderViewModel
 import com.example.cupcakeapp1.ui.StartOrderScreen
 import com.example.cupcakeapp1.ui.SelectOptionScreen
 
 enum class CupcakeScreen(val title: String) {
     Start(title = "Cupcake App"),
-    Flavor(title = "Choose Flavor"),
+    Flavor(title = "Choose Flavor")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +64,9 @@ fun CupcakeAppBar(
 }
 
 @Composable
-fun CupcakeApp() {
+fun CupcakeApp(
+    viewModel: OrderViewModel = viewModel()
+) {
     val navController: NavHostController = rememberNavController()
 
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -79,6 +84,8 @@ fun CupcakeApp() {
             )
         }
     ) { innerPadding ->
+        val uiState by viewModel.uiState.collectAsState()
+
         NavHost(
             navController = navController,
             startDestination = CupcakeScreen.Start.name,
@@ -90,7 +97,8 @@ fun CupcakeApp() {
             composable(route = CupcakeScreen.Start.name) {
                 StartOrderScreen(
                     quantityOptions = DataSource.quantityOptions,
-                    onNextButtonClicked = {
+                    onNextButtonClicked = { quantity ->
+                        viewModel.setQuantity(quantity)
                         navController.navigate(CupcakeScreen.Flavor.name)
                     },
                     modifier = Modifier
@@ -102,9 +110,25 @@ fun CupcakeApp() {
             composable(route = CupcakeScreen.Flavor.name) {
                 val context = LocalContext.current
                 SelectOptionScreen(
-                    options = DataSource.flavors.map { id -> context.resources.getString(id) }
+                    subtotal = uiState.price,
+                    options = DataSource.flavors.map { id -> context.resources.getString(id) },
+                    onSelectionChanged = { flavor ->
+                        viewModel.setFlavor(flavor)
+                    },
+                    onCancelButtonClicked = {
+                        cancelOrderAndNavigateToStart(viewModel, navController)
+                    },
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }
     }
+}
+
+private fun cancelOrderAndNavigateToStart(
+    viewModel: OrderViewModel,
+    navController: NavHostController
+) {
+    viewModel.resetOrder()
+    navController.popBackStack(CupcakeScreen.Start.name, inclusive = false)
 }
