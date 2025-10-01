@@ -33,7 +33,9 @@ import com.example.cupcakeapp1.ui.SelectOptionScreen
 
 enum class CupcakeScreen(val title: String) {
     Start(title = "Cupcake App"),
-    Flavor(title = "Choose Flavor")
+    Flavor(title = "Choose Flavor"),
+    Pickup(title = "Choose Pickup Date"),
+    Summary(title = "Order Summary")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -115,11 +117,33 @@ fun CupcakeApp(
                     onSelectionChanged = { flavor ->
                         viewModel.setFlavor(flavor)
                     },
+                    onNextButtonClicked = {
+                        navController.navigate(CupcakeScreen.Pickup.name)
+                    },
                     onCancelButtonClicked = {
                         cancelOrderAndNavigateToStart(viewModel, navController)
                     },
                     modifier = Modifier.fillMaxSize()
                 )
+            }
+
+            composable(route = CupcakeScreen.Pickup.name) {
+                SelectOptionScreen(
+                    subtotal = uiState.price,
+                    options = listOf("Today", "Tomorrow", "Next Week"),
+                    onSelectionChanged = { /* TODO */ },
+                    onNextButtonClicked = {
+                        navController.navigate(CupcakeScreen.Summary.name)
+                    },
+                    onCancelButtonClicked = {
+                        cancelOrderAndNavigateToStart(viewModel, navController)
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            composable(route = CupcakeScreen.Summary.name) {
+                // TODO: Implementar pantalla de resumen
             }
         }
     }

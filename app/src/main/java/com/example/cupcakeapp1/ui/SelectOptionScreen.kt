@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -31,6 +32,7 @@ fun SelectOptionScreen(
     options: List<String>,
     onSelectionChanged: (String) -> Unit = {},
     onCancelButtonClicked: () -> Unit = {},
+    onNextButtonClicked: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var selectedValue by rememberSaveable { mutableStateOf("") }
@@ -78,7 +80,6 @@ fun SelectOptionScreen(
                     bottom = dimensionResource(R.dimen.padding_medium)
                 )
             )
-
             Text(
                 text = stringResource(R.string.subtotal_price, subtotal),
                 modifier = Modifier
@@ -95,13 +96,22 @@ fun SelectOptionScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.padding_medium)),
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.spacedBy(
+                dimensionResource(R.dimen.padding_medium)
+            )
         ) {
             OutlinedButton(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.weight(1f),
                 onClick = onCancelButtonClicked
             ) {
                 Text(stringResource(R.string.cancel))
+            }
+            Button(
+                modifier = Modifier.weight(1f),
+                enabled = selectedValue.isNotEmpty(),
+                onClick = onNextButtonClicked
+            ) {
+                Text(stringResource(R.string.next))
             }
         }
     }
@@ -113,7 +123,7 @@ fun SelectOptionPreview() {
     CupcakeApp1Theme {
         SelectOptionScreen(
             subtotal = "$3.00",
-            options = listOf("Vanilla", "Chocolate", "Red Velvet", "Coffee"),
+            options = listOf("Option 1", "Option 2", "Option 3", "Option 4"),
             modifier = Modifier.fillMaxWidth()
         )
     }
