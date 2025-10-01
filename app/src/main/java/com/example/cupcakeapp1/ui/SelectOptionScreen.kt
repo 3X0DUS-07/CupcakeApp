@@ -38,7 +38,6 @@ fun SelectOptionScreen(
     Column(
         modifier = modifier
     ) {
-        // Opciones de selección
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -80,7 +79,6 @@ fun SelectOptionScreen(
                 )
             )
 
-            // Mostrar subtotal
             Text(
                 text = stringResource(R.string.subtotal_price, subtotal),
                 modifier = Modifier
@@ -93,7 +91,6 @@ fun SelectOptionScreen(
             )
         }
 
-        // Botón Cancel
         Row(
             modifier = Modifier
                 .fillMaxWidth()
